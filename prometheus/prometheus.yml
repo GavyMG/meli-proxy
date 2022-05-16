@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 5s
+
+rule_files:
+
+scrape_configs:
+  - job_name: 'meli-proxy'
+    static_configs:
+      - targets: ['meli-proxy:5000']
+
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']

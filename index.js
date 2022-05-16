@@ -3,11 +3,25 @@ const express = require('express')
 const cors = require('cors')
 const routes = require('./routes')
 const rateLimit = require('express-rate-limit')
+const client = require('prom-client')
 // const LimitRule = require('./db/models')
 // require('./db/db')
 const PORT = process.env.PORT
 
 const app = express()
+
+const collectDefaultMetrics = client.collectDefaultMetrics
+const register = new client.Registry()
+
+register.setDefaultLabels({
+	app: 'meli-proxy'
+})
+collectDefaultMetrics({
+	labels: {
+		app: "meli-proxy"
+	},
+})
+collectDefaultMetrics({ register })
 
 // // Middleware
 // Rate Limiting
@@ -32,6 +46,10 @@ app.set('trust proxy', 1)
 // Enable cors
 app.use(cors())
 
+app.get('/metrics', async (req, resp) => {
+    resp.setHeader('Content-type', register.contentType)
+    resp.end(await register.metrics())
+})
 // Routes
 app.use('/', routes)
 

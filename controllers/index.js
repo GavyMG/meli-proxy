@@ -16,7 +16,7 @@ exports.sendRequest = async (req, res, netx) => {
         }
             
         if (process.NODE_ENV !== 'production') {
-            console.log(`REQUEST: ${req.url}`)
+            console.log(`REQUEST: ${new_req_url}`)
         }
         const apiRes = await needle(req.method, new_req_url)
         const data = apiRes.body
